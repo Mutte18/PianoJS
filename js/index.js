@@ -1,3 +1,5 @@
+
+
 function createPiano(octaves){
     const pianoHTML = document.querySelector('.pianoContainer');
     for(let i = 0; i < octaves; i++){
@@ -54,6 +56,10 @@ const pianoTanget = document.querySelector('.pianoContainer');
 pianoTanget.addEventListener('click', e => {
     chooseTangent(e.target.id);
 });
+
+function requestPianoKey(){
+
+}
 
 createPiano(3);
 //initializePiano();

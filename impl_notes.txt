@@ -1,0 +1,3 @@
+1. I probably want to have a UI controller, a keyboard controller and a main controller that connects them
+2. Should each key actually be its own class? With the HTML inside the class
+3. The question part should be its own controller/class aswell?
