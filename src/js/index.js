@@ -1,14 +1,41 @@
-
+import PianoKey from './Models/PianoKey';
+const keysArray = [];
 
 function createPiano(octaves){
     const pianoHTML = document.querySelector('.pianoContainer');
-    for(let i = 0; i < octaves; i++){
-        pianoHTML.insertAdjacentHTML('beforeend', getPianoTangents(i));
-    }
+    pianoHTML.insertAdjacentHTML('beforeend', getPianoTangents(octaves));
 }
 
-function getPianoTangents(id){
-    const html =
+
+
+function createPianoKeys(id){
+    keysArray.push(new PianoKey(id, 'white', 'c'));
+    keysArray.push(new PianoKey(id, 'black', 'cs'));
+    keysArray.push(new PianoKey(id, 'white', 'd'));
+    keysArray.push(new PianoKey(id, 'black', 'ds'));
+    keysArray.push(new PianoKey(id, 'white', 'e'));
+    keysArray.push(new PianoKey(id, 'white', 'f'));
+    keysArray.push(new PianoKey(id, 'black', 'fs'));
+    keysArray.push(new PianoKey(id, 'white', 'g'));
+    keysArray.push(new PianoKey(id, 'black', 'gs'));
+    keysArray.push(new PianoKey(id, 'white', 'a'));
+    keysArray.push(new PianoKey(id, 'black', 'as'));
+    keysArray.push(new PianoKey(id, 'white', 'b'));
+}
+
+function getPianoTangents(octaves){
+    for(let i = 0; i < octaves; i++){
+        createPianoKeys(i);
+    }
+
+    let html =``;
+    for(let i = 0; i < keysArray.length; i++){
+        html += keysArray[i].getHTML();
+    }
+    console.log(html);
+
+
+    /*const html =
         `<div class="key white c" id="c${id}">
                 C
             </div>
@@ -44,7 +71,7 @@ function getPianoTangents(id){
             </div>
             <div class="key white b" id="b${id}">
                 B
-            </div>`;
+            </div>`;*/
     return html;
 }
 
@@ -55,7 +82,10 @@ function chooseTangent(id) {
 const pianoTanget = document.querySelector('.pianoContainer');
 pianoTanget.addEventListener('click', e => {
     chooseTangent(e.target.id);
+    console.log(keysArray);
 });
+
+
 
 function requestPianoKey(){
 
