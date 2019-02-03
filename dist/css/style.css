@@ -34,7 +34,11 @@
     margin: 0 0 0 -1em;
     background-color: black;
     z-index: 2;
+}
 
+.key.black p{
+    color: white;
+    margin-top: 5em;
 }
 .b, .e, .g, .d, .a{
     margin: 0 0 0 -1em;
@@ -43,6 +47,11 @@
 .key{
     float:    left;
     position: relative;
+    text-align: center;
+}
+.key.white p{
+    color: black;
+    margin-top: 10em;
 }
 
 .key:hover{

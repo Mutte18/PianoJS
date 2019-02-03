@@ -15,7 +15,7 @@
 
     getHTML(){
         return`<div class="key ${this.color} ${this.note}" id="${this.note}${this.id}">
-                ${this.note.toUpperCase()}
+                <p>${this.note}${this.id}</p>
             </div>`;
     }
 }

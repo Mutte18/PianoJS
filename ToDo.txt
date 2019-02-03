@@ -1,0 +1,11 @@
+1. Save the key clicked on in a variable
+2. Compare the clicked key with the corresponding in the map, if they
+are the same then it is correct
+3. If correct, toggle a classlist on the key with green color
+4. Show some text with congrats or some shit
+5. If wrong, toggle a classlist on the key with red color, and show the
+correct key by blinking?
+6. Decide on how or what keys should be pressed
+7. Get images for every key
+8. Decide on how many keys should be, and where mid C should be,
+c1 or c0?
