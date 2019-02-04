@@ -12,8 +12,10 @@
 
 .questionPrompt{
     position: center;
-    font-size: 5em;
+    font-size: 3em;
     background: white;
+    text-align: center;
+    height: 2.5em;
 }
 
 .pianoWrapper{
@@ -35,6 +37,12 @@
     background-color: black;
     z-index: 2;
 }
+.correctKey{
+    background: lawngreen;
+}
+.incorrectKey{
+    background: darkred;
+}
 
 .key.black p{
     color: white;
@@ -54,8 +62,10 @@
     margin-top: 10em;
 }
 
-.key:hover{
+.key.active:hover{
     background: greenyellow;
+}
+.key:hover{
 }
 
 

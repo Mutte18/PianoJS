@@ -4,10 +4,17 @@ const keysMap = new Map();
 let gameRunning = true;
 let currentKey;
 
+const DOMStrings = {
+    pianoContainer: '.pianoContainer',
+    questionPromt: '.questionPrompt',
+    pianoKey: '.key',
+    activeHover: 'hover'
+
+};
+
 function createPiano(octaves) {
-    const pianoHTML = document.querySelector('.pianoContainer');
+    const pianoHTML = document.querySelector(DOMStrings.pianoContainer);
     pianoHTML.insertAdjacentHTML('beforeend', getPianoTangents(octaves));
-    currentKey = keysMap.get('c0');
 }
 
 
@@ -50,7 +57,6 @@ function getPianoTangents(octaves) {
     /*for(let i = 0; i < keysMap.length; i++){
         html += keysArray[i].getHTML();
     }*/
-    console.log(html);
     return html;
 }
 
@@ -63,36 +69,95 @@ pianoTanget.addEventListener('click', e => {
     chooseTangent(e.target.id);
     requestPianoKey(e.target.id);
 });*/
+function setKeyToGuess() {
+    const idsArray = [0];
+    const notesArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+
+    const randomNote = notesArray[Math.floor(Math.random() * notesArray.length)]
+    const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
+    currentKey = keysMap.get(randomNote + randomId);
+    document.querySelector(DOMStrings.questionPromt).textContent = `Please click on ${randomNote + randomId}`;
+}
+
+function setUpEventHandlers() {
+    document.querySelector(DOMStrings.pianoContainer).addEventListener('click', e => {
+        if (gameRunning) {
+            selectKey(e.target.id);
+        }
+    });
 
 
-const keyEventHandler = document.querySelector('.pianoContainer');
-keyEventHandler.addEventListener('click', e => {
-    const clickedKey = e.target.id;
-    const key = getKey(clickedKey);
-    if(key.getNote() === currentKey.getNote()
-        && key.getId() === currentKey.getId()){
-        document.querySelector('.questionBox').textContent = "CORRECT!";
+    document.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+            if (!gameRunning) {
+                gameRunning = true;
+                toggleHoverOnKeys();
+                clearSelectedKeys();
+                setKeyToGuess();
+            }
+        }
+    });
+}
+
+
+function selectKey(id) {
+
+    if (id !== "") {
+        gameRunning = false;
+        const clickedKey = getKey(id);
+        console.log(clickedKey);
+        const requestedKey = clickedKey.getNote() + clickedKey.getId();
+
+        const correctKey = currentKey.getNote() + currentKey.getId();
+        console.log(requestedKey, correctKey);
+        if (requestedKey === correctKey) {
+            document.querySelector(DOMStrings.questionPromt).innerHTML = "CORRECT! <br> Press ENTER to start over";
+            document.getElementById(`${requestedKey}`).classList.add('correctKey');
+        }
+        else {
+            document.querySelector(DOMStrings.questionPromt).innerHTML = "WROOOONG! <br> Press ENTER to start over";
+            document.getElementById(`${requestedKey}`).classList.add('incorrectKey');
+            document.getElementById(`${correctKey}`).classList.add('correctKey');
+        }
+        toggleHoverOnKeys()
     }
-    else{
-        document.querySelector('.questionBox').textContent = "WROOOONG!";
-        document.getElementById(key.getNote() + key.getId()).style.backgroundColor = "red";
-        document.getElementById(currentKey.getNote() + currentKey.getId()).style.backgroundColor = "green";
-    }
 
+}
 
-});
+function clearSelectedKeys() {
+    keysMap.forEach(e => {
+        const key = e.getNote() + e.getId();
+        document.getElementById(`${key}`).classList.remove('incorrectKey');
+        document.getElementById(`${key}`).classList.remove('correctKey');
+    })
+}
 
-function getKey(id){
+function getKey(id) {
     return keysMap.get(id);
 }
 
-function checkKey(key){
+function checkKey(key) {
 
 }
+
 function requestPianoKey(keyId) {
     return keysMap.get('c0');
 
 }
 
-createPiano(2);
+function toggleHoverOnKeys() {
+    const allKeys = document.querySelectorAll(DOMStrings.pianoKey);
+    for (let i = 0; i < allKeys.length; i++) {
+        allKeys[i].classList.toggle('active');
+    }
+}
+
+function init() {
+    createPiano(2);
+    setUpEventHandlers();
+    setKeyToGuess();
+}
+
+
+init();
 //initializePiano();
