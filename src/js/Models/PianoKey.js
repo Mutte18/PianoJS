@@ -14,7 +14,7 @@
     }
 
     getHTML(){
-        return`<div class="key ${this.color} ${this.note} active" id="${this.note}${this.id}">
+        return`<div class="key ${this.color} ${this.note} active disable-select" id="${this.note}${this.id}">
                 <p>${this.note}${this.id}</p>
             </div>`;
     }

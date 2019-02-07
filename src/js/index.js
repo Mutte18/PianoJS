@@ -76,7 +76,7 @@ function setKeyToGuess() {
     const randomNote = notesArray[Math.floor(Math.random() * notesArray.length)]
     const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
     currentKey = keysMap.get(randomNote + randomId);
-    document.querySelector(DOMStrings.questionPromt).textContent = `Please click on ${randomNote + randomId}`;
+    //document.querySelector(DOMStrings.questionPromt).innerHTML = `Please click on ${randomNote + randomId}"`;
 }
 
 function setUpEventHandlers() {
