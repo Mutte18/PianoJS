@@ -1,5 +1,8 @@
 import PianoKey from './Models/PianoKey';
 
+const notesImages =
+    importAll(require.context('../img', false, /\.(png|jpe?g|svg)$/));
+
 const keysMap = new Map();
 let gameRunning = true;
 let currentKey;
@@ -11,6 +14,16 @@ const DOMStrings = {
     activeHover: 'hover'
 
 };
+
+//Retrieves the images from the file specified to be able to work with webpack
+function importAll(r) {
+    let images = {};
+    r.keys().map((item, index) => {
+        images[item.replace('./', '')] = r(item);
+    });
+    return images;
+}
+
 
 function createPiano(octaves) {
     const pianoHTML = document.querySelector(DOMStrings.pianoContainer);
@@ -45,6 +58,7 @@ function createPianoKeys(id) {
     keysArray.push(new PianoKey(id, 'white', 'b'));*/
 }
 
+
 function getPianoTangents(octaves) {
     for (let i = -1; i < octaves; i++) {
         createPianoKeys(i);
@@ -76,7 +90,19 @@ function setKeyToGuess() {
     const randomNote = notesArray[Math.floor(Math.random() * notesArray.length)]
     const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
     currentKey = keysMap.get(randomNote + randomId);
+    updateNoteImage(currentKey);
+    updateKeyText(currentKey);
     //document.querySelector(DOMStrings.questionPromt).innerHTML = `Please click on ${randomNote + randomId}"`;
+}
+
+function updateNoteImage(note) {
+    document.querySelector('.notes').innerHTML = `
+                <img src=${notesImages[`${note.getNote()}${note.getId()}.png`]}>
+`;
+}
+
+function updateKeyText(note){
+    document.querySelector(DOMStrings.questionPromt).innerHTML = `Please press ${note.getNote()}${note.getId()}`;
 }
 
 function setUpEventHandlers() {
