@@ -44,18 +44,6 @@ function createPianoKeys(id) {
     keysMap.set(`a${id}`, new PianoKey(id, 'white', 'a'));
     keysMap.set(`as${id}`, new PianoKey(id, 'black', 'as'));
     keysMap.set(`b${id}`, new PianoKey(id, 'white', 'b'));
-    /*keysArray.push(new PianoKey(id, 'white', 'c'));
-    keysArray.push(new PianoKey(id, 'black', 'cs'));
-    keysArray.push(new PianoKey(id, 'white', 'd'));
-    keysArray.push(new PianoKey(id, 'black', 'ds'));
-    keysArray.push(new PianoKey(id, 'white', 'e'));
-    keysArray.push(new PianoKey(id, 'white', 'f'));
-    keysArray.push(new PianoKey(id, 'black', 'fs'));
-    keysArray.push(new PianoKey(id, 'white', 'g'));
-    keysArray.push(new PianoKey(id, 'black', 'gs'));
-    keysArray.push(new PianoKey(id, 'white', 'a'));
-    keysArray.push(new PianoKey(id, 'black', 'as'));
-    keysArray.push(new PianoKey(id, 'white', 'b'));*/
 }
 
 
@@ -68,21 +56,10 @@ function getPianoTangents(octaves) {
     keysMap.forEach(el => {
         html += el.getHTML();
     });
-    /*for(let i = 0; i < keysMap.length; i++){
-        html += keysArray[i].getHTML();
-    }*/
     return html;
 }
 
-function chooseTangent(id) {
-    console.log(document.getElementById(id).id);
-}
 
-/*const pianoTanget = document.querySelector('.pianoContainer');
-pianoTanget.addEventListener('click', e => {
-    chooseTangent(e.target.id);
-    requestPianoKey(e.target.id);
-});*/
 function setKeyToGuess() {
     const idsArray = [0];
     const notesArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
@@ -92,7 +69,6 @@ function setKeyToGuess() {
     currentKey = keysMap.get(randomNote + randomId);
     updateNoteImage(currentKey);
     updateKeyText(currentKey);
-    //document.querySelector(DOMStrings.questionPromt).innerHTML = `Please click on ${randomNote + randomId}"`;
 }
 
 function updateNoteImage(note) {
