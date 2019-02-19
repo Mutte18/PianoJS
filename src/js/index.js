@@ -1,64 +1,30 @@
-import PianoKey from './Models/PianoKey';
+import {updateNoteImage, updateKeyText} from "./Views/UIHandler";
+import {getKey, createPiano, clearSelectedKeys, toggleHoverOnKeys} from "./Views/PianoHandler";
 
-const notesImages =
-    importAll(require.context('../img', false, /\.(png|jpe?g|svg)$/));
 
-const keysMap = new Map();
 let gameRunning = true;
-let currentKey;
+let currentKey = {};
+let currentMode;
 
-const DOMStrings = {
-    pianoContainer: '.pianoContainer',
-    questionPromt: '.questionPrompt',
-    pianoKey: '.key',
-    activeHover: 'hover'
-
+let accordSelection = {
+    key1: "",
+    key2: "",
+    key3: "",
+    clicksRemaining: 3,
 };
 
-//Retrieves the images from the file specified to be able to work with webpack
-function importAll(r) {
-    let images = {};
-    r.keys().map((item, index) => {
-        images[item.replace('./', '')] = r(item);
-    });
-    return images;
-}
+const modeEnum = {
+    SINGLE_KEY_MODE: 1,
+    ACCORD_MODE: 2,
+    FREE_PLAY_MODE: 3
+};
 
-
-function createPiano(octaves) {
-    const pianoHTML = document.querySelector(DOMStrings.pianoContainer);
-    pianoHTML.insertAdjacentHTML('beforeend', getPianoTangents(octaves));
-}
-
-
-function createPianoKeys(id) {
-    keysMap.set(`c${id}`, new PianoKey(id, 'white', 'c'));
-    keysMap.set(`cs${id}`, new PianoKey(id, 'black', 'cs'));
-    keysMap.set(`d${id}`, new PianoKey(id, 'white', 'd'));
-    keysMap.set(`ds${id}`, new PianoKey(id, 'black', 'ds'));
-    keysMap.set(`e${id}`, new PianoKey(id, 'white', 'e'));
-    keysMap.set(`f${id}`, new PianoKey(id, 'white', 'f'));
-    keysMap.set(`fs${id}`, new PianoKey(id, 'black', 'fs'));
-    keysMap.set(`g${id}`, new PianoKey(id, 'white', 'g'));
-    keysMap.set(`gs${id}`, new PianoKey(id, 'black', 'gs'));
-    keysMap.set(`a${id}`, new PianoKey(id, 'white', 'a'));
-    keysMap.set(`as${id}`, new PianoKey(id, 'black', 'as'));
-    keysMap.set(`b${id}`, new PianoKey(id, 'white', 'b'));
-}
-
-
-function getPianoTangents(octaves) {
-    for (let i = -1; i < octaves; i++) {
-        createPianoKeys(i);
-    }
-
-    let html = ``;
-    keysMap.forEach(el => {
-        html += el.getHTML();
-    });
-    return html;
-}
-
+export const DOMStrings = {
+    pianoContainer: '.pianoContainer',
+    questionPrompt: '.questionPrompt',
+    pianoKey: '.key',
+    activeHover: 'hover'
+};
 
 function setKeyToGuess() {
     const idsArray = [0];
@@ -66,28 +32,17 @@ function setKeyToGuess() {
 
     const randomNote = notesArray[Math.floor(Math.random() * notesArray.length)]
     const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
-    currentKey = keysMap.get(randomNote + randomId);
+    currentKey = getKey(randomNote+randomId);
     updateNoteImage(currentKey);
     updateKeyText(currentKey);
-}
-
-function updateNoteImage(note) {
-    document.querySelector('.notes').innerHTML = `
-                <img src=${notesImages[`${note.getNote()}${note.getId()}.png`]}>
-`;
-}
-
-function updateKeyText(note){
-    document.querySelector(DOMStrings.questionPromt).innerHTML = `Please press ${note.getNote()}${note.getId()}`;
 }
 
 function setUpEventHandlers() {
     document.querySelector(DOMStrings.pianoContainer).addEventListener('click', e => {
         if (gameRunning) {
-            selectKey(e.target.id);
+            playRound(e.target.id);
         }
     });
-
 
     document.addEventListener('keypress', e => {
         if (e.key === 'Enter') {
@@ -102,55 +57,77 @@ function setUpEventHandlers() {
 }
 
 
-function selectKey(id) {
+function singleKeySelection(id) {
 
     if (id !== "") {
         gameRunning = false;
         const clickedKey = getKey(id);
-        console.log(clickedKey);
         const requestedKey = clickedKey.getNote() + clickedKey.getId();
 
         const correctKey = currentKey.getNote() + currentKey.getId();
         console.log(requestedKey, correctKey);
         if (requestedKey === correctKey) {
-            document.querySelector(DOMStrings.questionPromt).innerHTML = "CORRECT! <br> Press ENTER to start over";
+            document.querySelector(DOMStrings.questionPrompt).innerHTML = "CORRECT! <br> Press ENTER to start over";
             document.getElementById(`${requestedKey}`).classList.add('correctKey');
         }
         else {
-            document.querySelector(DOMStrings.questionPromt).innerHTML = "WROOOONG! <br> Press ENTER to start over";
+            document.querySelector(DOMStrings.questionPrompt).innerHTML = "WROOOONG! <br> Press ENTER to start over";
             document.getElementById(`${requestedKey}`).classList.add('incorrectKey');
             document.getElementById(`${correctKey}`).classList.add('correctKey');
         }
         toggleHoverOnKeys()
     }
-
 }
 
-function clearSelectedKeys() {
-    keysMap.forEach(e => {
-        const key = e.getNote() + e.getId();
-        document.getElementById(`${key}`).classList.remove('incorrectKey');
-        document.getElementById(`${key}`).classList.remove('correctKey');
-    })
+function accordKeySelection(id){
+    /*
+    TODO: I NEED TO CHECK IF THE CLICKED KEY EXISTS, CANT HAVE SAME KEY TWICE
+    IF IT EXISTS THEN REMOVE FROM OBJECT?
+
+     */
+    if(accordSelection.clicksRemaining > 0 && accordSelection.key1 != getKey(id)) {
+        switch (accordSelection.clicksRemaining) {
+            case 3:
+                accordSelection.key1 = getKey(id);
+                break;
+            case 2:
+                accordSelection.key2 = getKey(id);
+                break;
+            case 1:
+                accordSelection.key3 = getKey(id);
+                break;
+        }
+        getKey(id).toggleSelected();
+        accordSelection.clicksRemaining -= 1;
+    }
+    console.log(accordSelection);
 }
 
-function getKey(id) {
-    return keysMap.get(id);
-}
 
-function checkKey(key) {
 
-}
-
-function requestPianoKey(keyId) {
-    return keysMap.get('c0');
-
-}
-
-function toggleHoverOnKeys() {
-    const allKeys = document.querySelectorAll(DOMStrings.pianoKey);
-    for (let i = 0; i < allKeys.length; i++) {
-        allKeys[i].classList.toggle('active');
+function playRound(id) {
+    switch (currentMode) {
+        case modeEnum.SINGLE_KEY_MODE:
+            singleKeySelection(id);
+            /*
+            1. Set up which key to guess
+            2. Allow User to click a key
+            3. Update UI and show right/wrong
+             */
+            break;
+        case modeEnum.ACCORD_MODE:
+            accordKeySelection(id);
+            /*
+            1. Set up the keys that are to be pressed
+            2. Allow user to click up to three different keys, if click same deselect key
+            3. Update UI and show right/wrong
+             */
+            break;
+        case modeEnum.FREE_PLAY_MODE:
+            /*
+            Just play the sound of the note pressed
+             */
+            break;
     }
 }
 
@@ -158,6 +135,7 @@ function init() {
     createPiano(2);
     setUpEventHandlers();
     setKeyToGuess();
+    currentMode = modeEnum.ACCORD_MODE;
 }
 
 

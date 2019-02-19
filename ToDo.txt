@@ -1,11 +1,36 @@
-1. Save the key clicked on in a variable
-2. Compare the clicked key with the corresponding in the map, if they
-are the same then it is correct
-3. If correct, toggle a classlist on the key with green color
-4. Show some text with congrats or some shit
-5. If wrong, toggle a classlist on the key with red color, and show the
-correct key by blinking?
-6. Decide on how or what keys should be pressed
-7. Get images for every key
-8. Decide on how many keys should be, and where mid C should be,
-c1 or c0?
+---New functionality ideas---
+
+# Implement a Accord mode and Single key mode with 2 toggle buttons at top of screen (THE CSS HAS TO BE DONE WITH IT)
+
+# When in Accord mode you can select up to three(?) keys to fulfill the accord
+
+# When selecting keys in accord mode, add a boolean in the PianoKey class that it is selected
+  if you want to deselect you just press the key again. When it is selected it should
+  turn to a different color as to show it is selected (yellow maybe)?
+
+# The accord will be shown as three notes on a note sheet
+
+# Add a new class for Sounds that the key makes. Get the key clicked and send in
+  and play the note. These sounds will have to be recorded. As well as the accords
+
+# Separate the js code to a UI class, a Sound class, a Functionality class
+
+# Add new images of the notes which all have the same size
+
+# Potentially add a free play mode where you can just play the notes without query
+
+
+
+
+---Improving on existing functionality---
+# You should not be able to get the same note two times in a row
+# The switching of images should be seemless and should not flash
+# Add images of all existing keys (the lower and higher notes aswell as the f notes)
+# Add the new notes to the pool of keys to be queried
+# Add options as to which keys you want to train for (All, lower, mid, upper etc)
+
+
+---Improving on CSS---
+# The piano keys should look fancier, with a more shadowed look(?)
+# A good looking background somehow, something clean and simple
+#
