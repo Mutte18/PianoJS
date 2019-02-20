@@ -1,5 +1,6 @@
 import PianoKey from "../Models/PianoKey";
 import {DOMStrings} from "../index";
+import {toggleChordSelectedStyle} from "./UIHandler";
 
 const keysMap = new Map();
 
@@ -7,6 +8,7 @@ function addPianoToHTML() {
     const pianoHTML = document.querySelector(DOMStrings.pianoContainer);
     pianoHTML.insertAdjacentHTML('beforeend', getPianoKeysHTML());
 }
+
 function getPianoKeysHTML() {
     let html = ``;
     keysMap.forEach(el => {
@@ -31,7 +33,7 @@ function createPianoKeys(id) {
     keysMap.set(`b${id}`, new PianoKey(id, 'white', 'b'));
 }
 
-export function getKey(id){
+export function getKey(id) {
     return keysMap.get(id);
 }
 
@@ -43,7 +45,7 @@ export function clearSelectedKeys() {
     })
 }
 
-export function createPiano(octaves){
+export function createPiano(octaves) {
     for (let i = -1; i < octaves; i++) {
         createPianoKeys(i);
     }
@@ -51,9 +53,29 @@ export function createPiano(octaves){
 
 }
 
-export function toggleHoverOnKeys() {
-    const allKeys = document.querySelectorAll(DOMStrings.pianoKey);
-    for (let i = 0; i < allKeys.length; i++) {
-        allKeys[i].classList.toggle('active');
-    }
+
+
+//This is to be used when removing all Selections
+
+
+//JUST A TEST FUNCTION
+export function clearSelections() {
+    keysMap.forEach(el => {
+        if(el.getAccordSelected()){
+            toggleAccordSelectedStyle(el);
+            el.setAccordSelected(false);
+        }
+    });
+
 }
+
+/*for(let i = 0; i < keysMap; i++){
+
+    if(keysMap.get(i).getAccordSelected()){
+
+    }
+    else{
+
+    }
+}*/
+

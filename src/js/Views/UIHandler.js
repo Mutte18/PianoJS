@@ -21,3 +21,14 @@ export function updateNoteImage(note) {
 export function updateKeyText(note){
     document.querySelector(DOMStrings.questionPrompt).innerHTML = `Please press ${note.getNote()}${note.getId()}`;
 }
+
+export function toggleChordSelectedStyle(key){
+    document.getElementById(key.getNote()+key.getId()).classList.toggle('chordSelected');
+}
+
+export function toggleHoverOnKeys() {
+    const allKeys = document.querySelectorAll(DOMStrings.pianoKey);
+    for (let i = 0; i < allKeys.length; i++) {
+        allKeys[i].classList.toggle('active');
+    }
+}

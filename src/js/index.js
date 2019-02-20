@@ -1,17 +1,17 @@
-import {updateNoteImage, updateKeyText} from "./Views/UIHandler";
-import {getKey, createPiano, clearSelectedKeys, toggleHoverOnKeys} from "./Views/PianoHandler";
+import {updateNoteImage, updateKeyText, toggleHoverOnKeys} from "./Views/UIHandler";
+import {getKey, createPiano, clearSelectedKeys, clearSelections} from "./Views/PianoHandler";
+import {addKeyToChord,
+    setUpAccordToGuess,
+    verifySelectedAccord
+} from "./Views/ChordHandler";
 
 
 let gameRunning = true;
 let currentKey = {};
 let currentMode;
 
-let accordSelection = {
-    key1: "",
-    key2: "",
-    key3: "",
-    clicksRemaining: 3,
-};
+
+
 
 const modeEnum = {
     SINGLE_KEY_MODE: 1,
@@ -26,13 +26,15 @@ export const DOMStrings = {
     activeHover: 'hover'
 };
 
+
+
 function setKeyToGuess() {
     const idsArray = [0];
     const notesArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
 
     const randomNote = notesArray[Math.floor(Math.random() * notesArray.length)]
     const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
-    currentKey = getKey(randomNote+randomId);
+    currentKey = getKey(randomNote + randomId);
     updateNoteImage(currentKey);
     updateKeyText(currentKey);
 }
@@ -52,6 +54,10 @@ function setUpEventHandlers() {
                 clearSelectedKeys();
                 setKeyToGuess();
             }
+        }
+        if (e.key === 'x') {
+            verifySelectedAccord();
+            //clearSelections();
         }
     });
 }
@@ -79,30 +85,55 @@ function singleKeySelection(id) {
     }
 }
 
-function accordKeySelection(id){
+
+
+
+
+
+
+function accordKeySelection(id) {
     /*
     TODO: I NEED TO CHECK IF THE CLICKED KEY EXISTS, CANT HAVE SAME KEY TWICE
     IF IT EXISTS THEN REMOVE FROM OBJECT?
 
      */
-    if(accordSelection.clicksRemaining > 0 && accordSelection.key1 != getKey(id)) {
-        switch (accordSelection.clicksRemaining) {
-            case 3:
-                accordSelection.key1 = getKey(id);
-                break;
-            case 2:
-                accordSelection.key2 = getKey(id);
-                break;
-            case 1:
-                accordSelection.key3 = getKey(id);
-                break;
-        }
-        getKey(id).toggleSelected();
-        accordSelection.clicksRemaining -= 1;
-    }
-    console.log(accordSelection);
-}
+    if (id !== "") {
+        const clickedKey = getKey(id);
+        addKeyToChord(clickedKey);
 
+    }
+
+
+//TODO
+/*
+1. Loop through the accord object to check if the key already exists
+2. If it exists, then clear the object (this is if you click the same key)
+3. Set the ID of where the next object will be put at this ID
+4. Add the next click to the current ID
+
+IF above does not stand (operations as normal) then add to the object
+ */
+/*if (accordSelection.clicksRemaining > 0 && accordSelection.key1 !== currentKey
+    && accordSelection.key2 !== currentKey && accordSelection.key3 !== currentKey) {
+    switch (accordSelection.clicksRemaining) {
+        case 3:
+            accordSelection.key1 = currentKey;
+            break;
+        case 2:
+            accordSelection.key2 = currentKey;
+            break;
+        case 1:
+            accordSelection.key3 = currentKey;
+            break;
+    }
+    getKey(id).setAccordSelected(true);
+    toggleAccordSelectedStyle(currentKey);
+    //toggleAccordSelected();
+    accordSelection.clicksRemaining -= 1;
+}*/
+
+
+}
 
 
 function playRound(id) {
@@ -136,6 +167,9 @@ function init() {
     setUpEventHandlers();
     setKeyToGuess();
     currentMode = modeEnum.ACCORD_MODE;
+    let kalle = [getKey('c0'), getKey('d0'), getKey('e0')];
+    setUpAccordToGuess(kalle);
+    //currentMode = modeEnum.SINGLE_KEY_MODE;
 }
 
 

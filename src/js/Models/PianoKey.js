@@ -3,7 +3,7 @@ export default class PianoKey{
         this.id = id;
         this.note = note;
         this.color = color;
-        this.selected = false;
+        this.chordSelected = false;
     };
 
     getId(){
@@ -20,13 +20,12 @@ export default class PianoKey{
             </div>`;
     }
 
-    getSelected(){
-        return this.selected;
+    getChordSelected(){
+        return this.chordSelected;
     }
 
-    toggleSelected(){
-        this.selected ? this.selected = false : this.selected = true;
-        document.getElementById(this.note+this.id).classList.toggle('accordSelected');
+    setChordSelected(value){
+        this.chordSelected = value;
 
     }
 }
