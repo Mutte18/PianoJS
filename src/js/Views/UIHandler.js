@@ -32,3 +32,21 @@ export function toggleHoverOnKeys() {
         allKeys[i].classList.toggle('active');
     }
 }
+
+export function addCorrectnessKeyStyle(key, isMatch){
+    console.log(key);
+
+    if(isMatch){
+        document.getElementById(key.getNote()+key.getId()).classList.add('correctKey');
+    }
+    else{
+        document.getElementById(key.getNote()+key.getId()).classList.add('incorrectKey');
+    }
+}
+
+export function clearCorrectnessKeyStyle(...keys){
+    keys.forEach(el => {
+        document.getElementById(el.getNote()+el.getId().classList.remove('incorrectKey'));
+        document.getElementById(el.getNote()+el.getId().classList.remove('correctKey'));
+    });
+}

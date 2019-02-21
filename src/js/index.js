@@ -1,7 +1,7 @@
-import {updateNoteImage, updateKeyText, toggleHoverOnKeys} from "./Views/UIHandler";
+import {updateNoteImage, updateKeyText, toggleHoverOnKeys, clearCorrectnessKeyStyle} from "./Views/UIHandler";
 import {getKey, createPiano, clearSelectedKeys, clearSelections} from "./Views/PianoHandler";
-import {addKeyToChord,
-    setUpAccordToGuess,
+import {
+    addKeyToChord,
     verifySelectedAccord
 } from "./Views/ChordHandler";
 
@@ -10,7 +10,16 @@ let gameRunning = true;
 let currentKey = {};
 let currentMode;
 
+let chordSize = 3;
 
+const userChord = {
+    desiredSizeOfChord: chordSize,
+    currentSize: 0,
+    currentIndex: 0,
+    chordArr: [],
+};
+
+let chordToGuess = [];
 
 
 const modeEnum = {
@@ -25,7 +34,6 @@ export const DOMStrings = {
     pianoKey: '.key',
     activeHover: 'hover'
 };
-
 
 
 function setKeyToGuess() {
@@ -52,12 +60,20 @@ function setUpEventHandlers() {
                 gameRunning = true;
                 toggleHoverOnKeys();
                 clearSelectedKeys();
+                clearCorrectnessKeyStyle();
                 setKeyToGuess();
+                initChordMode();
             }
         }
         if (e.key === 'x') {
-            verifySelectedAccord();
+            if (gameRunning) {
+                attemptChordGuess();
+            }
             //clearSelections();
+        }
+        if (e.key === 'c') {
+            console.log(userChord);
+            console.log(chordToGuess);
         }
     });
 }
@@ -86,10 +102,33 @@ function singleKeySelection(id) {
 }
 
 
+function attemptChordGuess() {
+    const chordResult = verifySelectedAccord(userChord, chordToGuess);
+    if (chordResult) {
+        console.log("YOU GUESSED RIGHT!");
+        //Call UI to say you won
+    }
+    else {
+        console.log("YOU GUESSED WRONG!");
 
+        //Call UI to say you lost
+    }
+    gameRunning = false;
+    toggleHoverOnKeys();
+}
 
+function initChordMode() {
+    userChord.chordArr = [];
+    chooseChordKeysToGuess();
 
+}
 
+function chooseChordKeysToGuess() {
+    //Here we will choose between pre set chords which contain specific keys
+
+    //FOR TESTING ALWAYS USING THE SAME
+    chordToGuess = [getKey('c0'), getKey('d0'), getKey('e0')];
+}
 
 function accordKeySelection(id) {
     /*
@@ -99,40 +138,8 @@ function accordKeySelection(id) {
      */
     if (id !== "") {
         const clickedKey = getKey(id);
-        addKeyToChord(clickedKey);
-
+        addKeyToChord(clickedKey, userChord);
     }
-
-
-//TODO
-/*
-1. Loop through the accord object to check if the key already exists
-2. If it exists, then clear the object (this is if you click the same key)
-3. Set the ID of where the next object will be put at this ID
-4. Add the next click to the current ID
-
-IF above does not stand (operations as normal) then add to the object
- */
-/*if (accordSelection.clicksRemaining > 0 && accordSelection.key1 !== currentKey
-    && accordSelection.key2 !== currentKey && accordSelection.key3 !== currentKey) {
-    switch (accordSelection.clicksRemaining) {
-        case 3:
-            accordSelection.key1 = currentKey;
-            break;
-        case 2:
-            accordSelection.key2 = currentKey;
-            break;
-        case 1:
-            accordSelection.key3 = currentKey;
-            break;
-    }
-    getKey(id).setAccordSelected(true);
-    toggleAccordSelectedStyle(currentKey);
-    //toggleAccordSelected();
-    accordSelection.clicksRemaining -= 1;
-}*/
-
-
 }
 
 
@@ -167,8 +174,9 @@ function init() {
     setUpEventHandlers();
     setKeyToGuess();
     currentMode = modeEnum.ACCORD_MODE;
-    let kalle = [getKey('c0'), getKey('d0'), getKey('e0')];
-    setUpAccordToGuess(kalle);
+    initChordMode();
+
+
     //currentMode = modeEnum.SINGLE_KEY_MODE;
 }
 
