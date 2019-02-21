@@ -4,6 +4,7 @@ import {
     addKeyToChord,
     verifySelectedAccord
 } from "./Views/ChordHandler";
+import {playSingleKeySound} from "./Views/SoundHandler";
 
 
 let gameRunning = true;
@@ -11,6 +12,8 @@ let currentKey = {};
 let currentMode;
 
 let chordSize = 3;
+
+
 
 const userChord = {
     desiredSizeOfChord: chordSize,
@@ -51,6 +54,7 @@ function setUpEventHandlers() {
     document.querySelector(DOMStrings.pianoContainer).addEventListener('click', e => {
         if (gameRunning) {
             playRound(e.target.id);
+
         }
     });
 
@@ -75,6 +79,10 @@ function setUpEventHandlers() {
             console.log(userChord);
             console.log(chordToGuess);
         }
+        if (e.key === 'b') {
+            //playSingleKeySound();
+        }
+
     });
 }
 
@@ -162,6 +170,8 @@ function playRound(id) {
              */
             break;
         case modeEnum.FREE_PLAY_MODE:
+            playSingleKeySound(id);
+
             /*
             Just play the sound of the note pressed
              */
@@ -173,7 +183,7 @@ function init() {
     createPiano(2);
     setUpEventHandlers();
     setKeyToGuess();
-    currentMode = modeEnum.ACCORD_MODE;
+    currentMode = modeEnum.FREE_PLAY_MODE;
     initChordMode();
 
 

@@ -2,12 +2,6 @@
 
 # Implement a Accord mode and Single key mode with 2 toggle buttons at top of screen (THE CSS HAS TO BE DONE WITH IT)
 
-# When in Accord mode you can select up to three(?) keys to fulfill the accord
-
-# When selecting keys in accord mode, add a boolean in the PianoKey class that it is selected
-  if you want to deselect you just press the key again. When it is selected it should
-  turn to a different color as to show it is selected (yellow maybe)?
-
 # The accord will be shown as three notes on a note sheet
 
 # Add a new class for Sounds that the key makes. Get the key clicked and send in
@@ -19,7 +13,8 @@
 
 # Potentially add a free play mode where you can just play the notes without query
 
-
+# Determine the chords that should be available to be chosen and what keys are in
+each chord
 
 
 ---Improving on existing functionality---
