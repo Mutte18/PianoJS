@@ -4,14 +4,12 @@
 
 # The accord will be shown as three notes on a note sheet
 
-# Add a new class for Sounds that the key makes. Get the key clicked and send in
-  and play the note. These sounds will have to be recorded. As well as the accords
+# Record the accord sounds (NORMAL KEYS ARE DONE, Use
+https://www.apronus.com/music/flashpiano.htm and extract audio files with audacity)
 
 # Separate the js code to a UI class, a Sound class, a Functionality class
 
 # Add new images of the notes which all have the same size
-
-# Potentially add a free play mode where you can just play the notes without query
 
 # Determine the chords that should be available to be chosen and what keys are in
 each chord
@@ -24,8 +22,20 @@ each chord
 # Add the new notes to the pool of keys to be queried
 # Add options as to which keys you want to train for (All, lower, mid, upper etc)
 
+# When not in chord mode, this counter should not be visible
+# When at the chord limit, hover on keys should be removed. Only if hovering over a selected should
+  it be visible. This is to improve on UX and user feedback (THE SOLUTION TO THIS COULD BE IMPROVED)
+
+# ADD DOMStrings TO EVERYTHING, BEFORE IT BECOMES A BIGGER MESS THAN IT IS!
+
 
 ---Improving on CSS---
 # The piano keys should look fancier, with a more shadowed look(?)
+# When pressing down on the keys it should be visible (Inspiration can be taken from
+(https://www.apronus.com/music/flashpiano.htm)
 # A good looking background somehow, something clean and simple
 #
+
+
+---Thoughts and Reflections---
+# When guessing a chord, should the correct chord be played, or the keys chosen?

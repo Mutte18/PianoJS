@@ -18,35 +18,65 @@ export function updateNoteImage(note) {
 `;
 }
 
-export function updateKeyText(note){
+export function updateKeyText(note) {
     document.querySelector(DOMStrings.questionPrompt).innerHTML = `Please press ${note.getNote()}${note.getId()}`;
 }
 
-export function toggleChordSelectedStyle(key){
-    document.getElementById(key.getNote()+key.getId()).classList.toggle('chordSelected');
+export function updateCorrectChordText() {
+    document.querySelector(DOMStrings.questionPrompt).innerHTML = `You guessed correctly!`;
 }
 
-export function toggleHoverOnKeys() {
+export function updateIncorrectChordText() {
+    document.querySelector(DOMStrings.questionPrompt).innerHTML = `Wrong chord!`;
+}
+
+export function updateChordToSelectText(chord) {
+    document.querySelector(DOMStrings.questionPrompt).innerHTML = `Please press the keys to make ${chord} chord`;
+
+}
+
+export function toggleChordSelectedStyle(key) {
+    document.getElementById(key.getNote() + key.getId()).classList.toggle('chordSelected');
+}
+
+export function removeHoverOnKeys() {
     const allKeys = document.querySelectorAll(DOMStrings.pianoKey);
     for (let i = 0; i < allKeys.length; i++) {
-        allKeys[i].classList.toggle('active');
+        allKeys[i].classList.remove('active');
     }
 }
 
-export function addCorrectnessKeyStyle(key, isMatch){
+export function addHoverOnKeys(){
+    const allKeys = document.querySelectorAll(DOMStrings.pianoKey);
+    for (let i = 0; i < allKeys.length; i++) {
+        allKeys[i].classList.add('active');
+    }
+}
+
+export function addHoverToChordKeys(userChord){
+    userChord.forEach(el => {
+        document.getElementById(el.getNote()+el.getId()).classList.add('active');
+    })
+}
+
+export function updateChordSelectionCounterText(chordSize = 0, chordToGuessSize){
+    document.querySelector('.chordSelectionCounter').textContent = `${chordSize}/${chordToGuessSize} selected`;
+}
+
+export function addCorrectnessKeyStyle(key, isMatch) {
     console.log(key);
 
-    if(isMatch){
-        document.getElementById(key.getNote()+key.getId()).classList.add('correctKey');
+    if (isMatch) {
+        document.getElementById(key.getNote() + key.getId()).classList.add('correctKey');
     }
-    else{
-        document.getElementById(key.getNote()+key.getId()).classList.add('incorrectKey');
+    else {
+        document.getElementById(key.getNote() + key.getId()).classList.add('incorrectKey');
     }
 }
 
-export function clearCorrectnessKeyStyle(...keys){
+export function clearCorrectnessKeyStyle(...keys) {
     keys.forEach(el => {
-        document.getElementById(el.getNote()+el.getId().classList.remove('incorrectKey'));
-        document.getElementById(el.getNote()+el.getId().classList.remove('correctKey'));
+        document.getElementById(el.getNote() + el.getId().classList.remove('incorrectKey'));
+        document.getElementById(el.getNote() + el.getId().classList.remove('correctKey'));
     });
 }

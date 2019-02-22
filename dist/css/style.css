@@ -1,6 +1,5 @@
 .wrapper{
 
-    background-color: red;
     height:100vh;
 }
 
@@ -70,6 +69,7 @@
     width: 2em;
     margin: 0 0 0 -1em;
     background-color: black;
+    border: 0.1px solid black;
     z-index: 2;
 }
 .correctKey{
@@ -101,6 +101,12 @@
     background: greenyellow;
 }
 .key:hover{
+}
+
+.chordSelectionCounter{
+    color: green;
+    float:left;
+    font-size: 3em;
 }
 
 

@@ -1,5 +1,7 @@
 import {toggleChordSelectedStyle, addCorrectnessKeyStyle, clearCorrectnessKeyStyle} from "./UIHandler";
 
+
+
 function addKeyToUserChordArray(key, userChord) {
     userChord.chordArr.push(key);
     key.setChordSelected(true);

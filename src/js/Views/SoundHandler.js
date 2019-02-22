@@ -15,9 +15,19 @@ function importAll(r) {
 export function playSingleKeySound(key){
     const keySound = new Audio(keySounds[`${key}.m4a`]);
     keySound.play();
+
+
 }
 
-export function playChordSound(userChord){
+export function playChordSound(chordToGuess){
+    const chordSounds = [];
+    chordToGuess.forEach(el => {
+        const id = el.getNote()+el.getId();
+        chordSounds.push(new Audio(keySounds[`${id}.m4a`]));
+    });
+    chordSounds.forEach(el => {
+        el.play();
+    });
     //ToDo
     //Add chord sounds
     //Will have to crosscheck which keys are in the chord (The order should not matter)

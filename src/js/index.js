@@ -1,11 +1,22 @@
-import {updateNoteImage, updateKeyText, toggleHoverOnKeys, clearCorrectnessKeyStyle} from "./Views/UIHandler";
+import {
+    updateNoteImage,
+    updateKeyText,
+    toggleHoverOnKeys,
+    clearCorrectnessKeyStyle,
+    updateCorrectChordText,
+    updateIncorrectChordText,
+    updateChordToSelectText,
+    removeHoverOnKeys,
+    addHoverOnKeys,
+    addHoverToChordKeys, updateChordSelectionCounterText
+} from "./Views/UIHandler";
 import {getKey, createPiano, clearSelectedKeys, clearSelections} from "./Views/PianoHandler";
 import {
     addKeyToChord,
     verifySelectedAccord
 } from "./Views/ChordHandler";
-import {playSingleKeySound} from "./Views/SoundHandler";
-
+import {playChordSound, playSingleKeySound} from "./Views/SoundHandler";
+import {getChord} from "./Models/Chords";
 
 let gameRunning = true;
 let currentKey = {};
@@ -13,6 +24,9 @@ let currentMode;
 
 let chordSize = 3;
 
+const desiredChord = "fMajor"; //IF YOU WANT A SPECIFIC CORD, WRITE THE NAME HERE
+                                //IT HAS TO BE SPELLED CORRECTLY
+                                //CHECK SPELLING IN CHORD.JS
 
 
 const userChord = {
@@ -27,7 +41,7 @@ let chordToGuess = [];
 
 const modeEnum = {
     SINGLE_KEY_MODE: 1,
-    ACCORD_MODE: 2,
+    CHORD_MODE: 2,
     FREE_PLAY_MODE: 3
 };
 
@@ -62,7 +76,7 @@ function setUpEventHandlers() {
         if (e.key === 'Enter') {
             if (!gameRunning) {
                 gameRunning = true;
-                toggleHoverOnKeys();
+                addHoverOnKeys();
                 clearSelectedKeys();
                 clearCorrectnessKeyStyle();
                 setKeyToGuess();
@@ -105,37 +119,45 @@ function singleKeySelection(id) {
             document.getElementById(`${requestedKey}`).classList.add('incorrectKey');
             document.getElementById(`${correctKey}`).classList.add('correctKey');
         }
-        toggleHoverOnKeys()
+        removeHoverOnKeys()
     }
 }
 
 
 function attemptChordGuess() {
-    const chordResult = verifySelectedAccord(userChord, chordToGuess);
-    if (chordResult) {
-        console.log("YOU GUESSED RIGHT!");
-        //Call UI to say you won
+    if(userChord.chordArr.length === chordSize) {
+        const chordResult = verifySelectedAccord(userChord, chordToGuess);
+        playChordSound(chordToGuess);
+        if (chordResult) {
+            console.log("YOU GUESSED RIGHT!");
+            updateCorrectChordText();
+        }
+        else {
+            console.log("YOU GUESSED WRONG!");
+            updateIncorrectChordText();
+        }
+        gameRunning = false;
+        removeHoverOnKeys();
     }
-    else {
-        console.log("YOU GUESSED WRONG!");
-
-        //Call UI to say you lost
-    }
-    gameRunning = false;
-    toggleHoverOnKeys();
 }
 
 function initChordMode() {
     userChord.chordArr = [];
     chooseChordKeysToGuess();
+    updateChordSelectionCounterText(userChord.chordArr.length, chordToGuess.length);
 
 }
 
 function chooseChordKeysToGuess() {
-    //Here we will choose between pre set chords which contain specific keys
-
-    //FOR TESTING ALWAYS USING THE SAME
-    chordToGuess = [getKey('c0'), getKey('d0'), getKey('e0')];
+    const chordObj = getChord(desiredChord);
+    updateChordToSelectText(chordObj.name);
+    const chordKeys = chordObj.keys;
+    chordToGuess = [];
+    chordKeys.forEach(el => {
+        chordToGuess.push(getKey(el));
+    });
+    chordSize = chordToGuess.length;
+    userChord.desiredSizeOfChord = chordSize;
 }
 
 function accordKeySelection(id) {
@@ -147,6 +169,16 @@ function accordKeySelection(id) {
     if (id !== "") {
         const clickedKey = getKey(id);
         addKeyToChord(clickedKey, userChord);
+        if(userChord.chordArr.length === chordToGuess.length){
+            removeHoverOnKeys();
+            addHoverToChordKeys(userChord.chordArr);
+        }
+        else{
+            addHoverOnKeys();
+        }
+        updateChordSelectionCounterText(userChord.chordArr.length, chordToGuess.length);
+        //Call UI to update chordCurrentCounter
+        //If chordCounter is at max, remove hover from all keys apart from selected
     }
 }
 
@@ -161,7 +193,7 @@ function playRound(id) {
             3. Update UI and show right/wrong
              */
             break;
-        case modeEnum.ACCORD_MODE:
+        case modeEnum.CHORD_MODE:
             accordKeySelection(id);
             /*
             1. Set up the keys that are to be pressed
@@ -183,8 +215,9 @@ function init() {
     createPiano(2);
     setUpEventHandlers();
     setKeyToGuess();
-    currentMode = modeEnum.FREE_PLAY_MODE;
+    currentMode = modeEnum.CHORD_MODE;
     initChordMode();
+    //getChord('bMajor');
 
 
     //currentMode = modeEnum.SINGLE_KEY_MODE;
