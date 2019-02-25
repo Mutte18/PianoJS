@@ -17,7 +17,6 @@ function clearCurrentKey(key, userChord) {
 
 //Check if the clicked key already exists in the chord
 function checkDuplicateChordKey(clickedKey, userChord) {
-    console.log(clickedKey);
     for (let i = 0; i < userChord.chordArr.length; i++) {
         if (clickedKey === userChord.chordArr[i]) {
             userChord.currentIndex = i;

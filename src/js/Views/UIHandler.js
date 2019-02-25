@@ -64,8 +64,6 @@ export function updateChordSelectionCounterText(chordSize = 0, chordToGuessSize)
 }
 
 export function addCorrectnessKeyStyle(key, isMatch) {
-    console.log(key);
-
     if (isMatch) {
         document.getElementById(key.getNote() + key.getId()).classList.add('correctKey');
     }

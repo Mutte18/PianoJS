@@ -1,22 +1,8 @@
-import {
-    updateNoteImage,
-    updateKeyText,
-    toggleHoverOnKeys,
-    clearCorrectnessKeyStyle,
-    updateCorrectChordText,
-    updateIncorrectChordText,
-    updateChordToSelectText,
-    removeHoverOnKeys,
-    addHoverOnKeys,
-    addHoverToChordKeys, updateChordSelectionCounterText
-} from "./Views/UIHandler";
-import {getKey, createPiano, clearSelectedKeys, clearSelections} from "./Views/PianoHandler";
-import {
-    addKeyToChord,
-    verifySelectedAccord
-} from "./Views/ChordHandler";
-import {playChordSound, playSingleKeySound} from "./Views/SoundHandler";
-import {getChord} from "./Models/Chords";
+import * as uiHandler from "./Views/UIHandler";
+import * as pianoHandler from "./Views/PianoHandler";
+import * as chordHandler from "./Views/ChordHandler";
+import * as soundHandler from "./Views/SoundHandler";
+import * as chords from "./Models/Chords";
 
 let gameRunning = true;
 let currentKey = {};
@@ -24,9 +10,9 @@ let currentMode;
 
 let chordSize = 3;
 
-const desiredChord = "fMajor"; //IF YOU WANT A SPECIFIC CORD, WRITE THE NAME HERE
-                                //IT HAS TO BE SPELLED CORRECTLY
-                                //CHECK SPELLING IN CHORD.JS
+const desiredChord = ""; //IF YOU WANT A SPECIFIC CORD, WRITE THE NAME HERE
+//IT HAS TO BE SPELLED CORRECTLY
+//CHECK SPELLING IN CHORD.JS
 
 
 const userChord = {
@@ -59,16 +45,16 @@ function setKeyToGuess() {
 
     const randomNote = notesArray[Math.floor(Math.random() * notesArray.length)]
     const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
-    currentKey = getKey(randomNote + randomId);
-    updateNoteImage(currentKey);
-    updateKeyText(currentKey);
+    currentKey = pianoHandler.getKey(randomNote + randomId);
+    uiHandler.updateNoteImage(currentKey);
+    uiHandler.updateKeyText(currentKey);
 }
 
 function setUpEventHandlers() {
     document.querySelector(DOMStrings.pianoContainer).addEventListener('click', e => {
         if (gameRunning) {
-            playRound(e.target.id);
-
+            let id = e.target.closest(`${DOMStrings.pianoKey}`).dataset.id;
+            playRound(id);
         }
     });
 
@@ -76,9 +62,9 @@ function setUpEventHandlers() {
         if (e.key === 'Enter') {
             if (!gameRunning) {
                 gameRunning = true;
-                addHoverOnKeys();
-                clearSelectedKeys();
-                clearCorrectnessKeyStyle();
+                uiHandler.addHoverOnKeys();
+                pianoHandler.clearSelectedKeys();
+                uiHandler.clearCorrectnessKeyStyle();
                 setKeyToGuess();
                 initChordMode();
             }
@@ -101,60 +87,60 @@ function setUpEventHandlers() {
 }
 
 
+
 function singleKeySelection(id) {
 
-    if (id !== "") {
-        gameRunning = false;
-        const clickedKey = getKey(id);
-        const requestedKey = clickedKey.getNote() + clickedKey.getId();
 
-        const correctKey = currentKey.getNote() + currentKey.getId();
-        console.log(requestedKey, correctKey);
-        if (requestedKey === correctKey) {
-            document.querySelector(DOMStrings.questionPrompt).innerHTML = "CORRECT! <br> Press ENTER to start over";
-            document.getElementById(`${requestedKey}`).classList.add('correctKey');
-        }
-        else {
-            document.querySelector(DOMStrings.questionPrompt).innerHTML = "WROOOONG! <br> Press ENTER to start over";
-            document.getElementById(`${requestedKey}`).classList.add('incorrectKey');
-            document.getElementById(`${correctKey}`).classList.add('correctKey');
-        }
-        removeHoverOnKeys()
+    gameRunning = false;
+    const clickedKey = pianoHandler.getKey(id);
+    const requestedKey = clickedKey.getNote() + clickedKey.getId();
+
+    const correctKey = currentKey.getNote() + currentKey.getId();
+    if (requestedKey === correctKey) {
+        document.querySelector(DOMStrings.questionPrompt).innerHTML = "CORRECT! <br> Press ENTER to start over";
+        document.getElementById(`${requestedKey}`).classList.add('correctKey');
     }
+    else {
+        document.querySelector(DOMStrings.questionPrompt).innerHTML = "WROOOONG! <br> Press ENTER to start over";
+        document.getElementById(`${requestedKey}`).classList.add('incorrectKey');
+        document.getElementById(`${correctKey}`).classList.add('correctKey');
+    }
+    uiHandler.removeHoverOnKeys()
+
 }
 
 
 function attemptChordGuess() {
-    if(userChord.chordArr.length === chordSize) {
-        const chordResult = verifySelectedAccord(userChord, chordToGuess);
-        playChordSound(chordToGuess);
+    if (userChord.chordArr.length === chordSize) {
+        const chordResult = chordHandler.verifySelectedAccord(userChord, chordToGuess);
+        soundHandler.playChordSound(chordToGuess);
         if (chordResult) {
             console.log("YOU GUESSED RIGHT!");
-            updateCorrectChordText();
+            uiHandler.updateCorrectChordText();
         }
         else {
             console.log("YOU GUESSED WRONG!");
-            updateIncorrectChordText();
+            uiHandler.updateIncorrectChordText();
         }
         gameRunning = false;
-        removeHoverOnKeys();
+        uiHandler.removeHoverOnKeys();
     }
 }
 
 function initChordMode() {
     userChord.chordArr = [];
     chooseChordKeysToGuess();
-    updateChordSelectionCounterText(userChord.chordArr.length, chordToGuess.length);
+    uiHandler.updateChordSelectionCounterText(userChord.chordArr.length, chordToGuess.length);
 
 }
 
 function chooseChordKeysToGuess() {
-    const chordObj = getChord(desiredChord);
-    updateChordToSelectText(chordObj.name);
+    const chordObj = chords.getChord(desiredChord);
+    uiHandler.updateChordToSelectText(chordObj.name);
     const chordKeys = chordObj.keys;
     chordToGuess = [];
     chordKeys.forEach(el => {
-        chordToGuess.push(getKey(el));
+        chordToGuess.push(pianoHandler.getKey(el));
     });
     chordSize = chordToGuess.length;
     userChord.desiredSizeOfChord = chordSize;
@@ -167,16 +153,16 @@ function accordKeySelection(id) {
 
      */
     if (id !== "") {
-        const clickedKey = getKey(id);
-        addKeyToChord(clickedKey, userChord);
-        if(userChord.chordArr.length === chordToGuess.length){
-            removeHoverOnKeys();
-            addHoverToChordKeys(userChord.chordArr);
+        const clickedKey = pianoHandler.getKey(id);
+        chordHandler.addKeyToChord(clickedKey, userChord);
+        if (userChord.chordArr.length === chordToGuess.length) {
+            uiHandler.removeHoverOnKeys();
+            uiHandler.addHoverToChordKeys(userChord.chordArr);
         }
-        else{
-            addHoverOnKeys();
+        else {
+            uiHandler.addHoverOnKeys();
         }
-        updateChordSelectionCounterText(userChord.chordArr.length, chordToGuess.length);
+        uiHandler.updateChordSelectionCounterText(userChord.chordArr.length, chordToGuess.length);
         //Call UI to update chordCurrentCounter
         //If chordCounter is at max, remove hover from all keys apart from selected
     }
@@ -202,7 +188,7 @@ function playRound(id) {
              */
             break;
         case modeEnum.FREE_PLAY_MODE:
-            playSingleKeySound(id);
+            soundHandler.playSingleKeySound(id);
 
             /*
             Just play the sound of the note pressed
@@ -212,7 +198,7 @@ function playRound(id) {
 }
 
 function init() {
-    createPiano(2);
+    pianoHandler.createPiano(2);
     setUpEventHandlers();
     setKeyToGuess();
     currentMode = modeEnum.CHORD_MODE;

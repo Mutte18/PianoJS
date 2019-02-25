@@ -1,0 +1,11 @@
+---------Ideas on how to improve the structure of the project------
+
+1. Should try to follow the MVC (Model, controller, view) pattern
+   In order to
+
+
+
+----Current Functionality----
+* Piano keys as their own objects, they have their html as a function but can be put in view?
+* You can click on each piano key
+* 

@@ -4,6 +4,8 @@ import {toggleChordSelectedStyle} from "./UIHandler";
 
 const keysMap = new Map();
 
+
+//This should be in a view, since it adds to the DOM
 function addPianoToHTML() {
     const pianoHTML = document.querySelector(DOMStrings.pianoContainer);
     pianoHTML.insertAdjacentHTML('beforeend', getPianoKeysHTML());
