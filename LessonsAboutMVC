@@ -1,0 +1,21 @@
+*View*
+Dessa filer ska endast ha funktioner som får anrop av Controllern,
+dessa view funktioner tar emot argument som den ska rita ut på HTML,
+eller ändra nuvarande DOM element eller ändra style
+
+*Model*
+Dessa filer är ”dumma” filer.
+De har ingen vetskap om programmet utan har mest intill bara get/set funktioner
+ och håller information
+
+*Controller*
+Just nu är detta index.js. Detta ska delas upp i mindre filer,
+ ex ChordController, SingleKeyController osv. Controller filerna behandlar all logik.
+ Så när en knapp trycks på i chordMode och om den ska läggas till eller inte sköts av Controller.
+
+*Klasser*
+För att följa MVC mönstret så ska View,
+Model och Controller vara klasser.
+Index.JS ska initialisera Model, View, och Controllers som sedan behandlar saker.
+Index.JS är typ Main i Java.
+
