@@ -3,12 +3,24 @@ import * as pianoHandler from "./Views/PianoHandler";
 import * as chordHandler from "./Views/ChordHandler";
 import * as soundHandler from "./Views/SoundHandler";
 import * as chords from "./Models/Chords";
+import SingleKeyController from "./Controller/SingleKeyController";
+import PianoController from "./Controller/PianoController";
+import PianoKeyView from "./Views/PianoKeyView";
+import QuestionPromptView from "./Views/QuestionPromptView";
+import InputHandler from "./InputHandler";
+import PianoKeyModel from "./Models/PianoKeyModel";
+import PianoKeysKeyMapModel from "./Models/PianoKeysKeyMapModel";
 
 let gameRunning = true;
 let currentKey = {};
 let currentMode;
 
 let chordSize = 3;
+
+
+
+
+
 
 const desiredChord = ""; //IF YOU WANT A SPECIFIC CORD, WRITE THE NAME HERE
 //IT HAS TO BE SPELLED CORRECTLY
@@ -93,9 +105,9 @@ function singleKeySelection(id) {
 
     gameRunning = false;
     const clickedKey = pianoHandler.getKey(id);
-    const requestedKey = clickedKey.getNote() + clickedKey.getId();
+    const requestedKey = clickedKey.getNote();
 
-    const correctKey = currentKey.getNote() + currentKey.getId();
+    const correctKey = currentKey.getNote();
     if (requestedKey === correctKey) {
         document.querySelector(DOMStrings.questionPrompt).innerHTML = "CORRECT! <br> Press ENTER to start over";
         document.getElementById(`${requestedKey}`).classList.add('correctKey');
@@ -198,15 +210,34 @@ function playRound(id) {
 }
 
 function init() {
-    pianoHandler.createPiano(2);
+
+    const pianoKeyView = new PianoKeyView();
+    const questionPromptView = new QuestionPromptView();
+    //const pianoController = new PianoController(pianoKeyView);
+    const pianoKeysMap = new PianoKeysKeyMapModel(2);
+    pianoKeyView.addPianoToHTML(pianoKeysMap.getPianoKeysHTML());
+    const singleKeyController = new SingleKeyController(
+        pianoKeyView, questionPromptView, pianoKeysMap);
+    const inputHandler = new InputHandler(singleKeyController);
+
+    /*pianoHandler.createPiano(2);
     setUpEventHandlers();
     setKeyToGuess();
-    currentMode = modeEnum.CHORD_MODE;
+    currentMode = modeEnum.SINGLE_KEY_MODE;
     initChordMode();
-    //getChord('bMajor');
+    //getChord('bMajor');*/
 
 
     //currentMode = modeEnum.SINGLE_KEY_MODE;
+}
+
+function createPiano(octaves) {
+
+    this.pianoKeyView.addPianoToHTML(this.getPianoKeysHTML()); //CALL TO VIEW
+}
+
+function createPianoKeys(id) {
+
 }
 
 

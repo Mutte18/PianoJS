@@ -13,13 +13,17 @@ function importAll(r) {
 }
 
 export function updateNoteImage(note) {
-    document.querySelector('.notes').innerHTML = `
+    /*document.querySelector('.notes').innerHTML = `
                 <img src=${notesImages[`${note.getNote()}${note.getId()}.png`]}>
+`;*/
+    document.querySelector('.notes').innerHTML = `
+                <img src=${notesImages[`${note.getNote()}.png`]}>
 `;
 }
 
 export function updateKeyText(note) {
-    document.querySelector(DOMStrings.questionPrompt).innerHTML = `Please press ${note.getNote()}${note.getId()}`;
+    //document.querySelector(DOMStrings.questionPrompt).innerHTML = `Please press ${note.getNote()}${note.getId()}`;
+
 }
 
 export function updateCorrectChordText() {
@@ -36,7 +40,7 @@ export function updateChordToSelectText(chord) {
 }
 
 export function toggleChordSelectedStyle(key) {
-    document.getElementById(key.getNote() + key.getId()).classList.toggle('chordSelected');
+    document.getElementById(key.getNote()).classList.toggle('chordSelected');
 }
 
 export function removeHoverOnKeys() {
@@ -55,7 +59,7 @@ export function addHoverOnKeys(){
 
 export function addHoverToChordKeys(userChord){
     userChord.forEach(el => {
-        document.getElementById(el.getNote()+el.getId()).classList.add('active');
+        document.getElementById(el.getNote()).classList.add('active');
     })
 }
 
@@ -65,16 +69,16 @@ export function updateChordSelectionCounterText(chordSize = 0, chordToGuessSize)
 
 export function addCorrectnessKeyStyle(key, isMatch) {
     if (isMatch) {
-        document.getElementById(key.getNote() + key.getId()).classList.add('correctKey');
+        document.getElementById(key.getNote()).classList.add('correctKey');
     }
     else {
-        document.getElementById(key.getNote() + key.getId()).classList.add('incorrectKey');
+        document.getElementById(key.getNote()).classList.add('incorrectKey');
     }
 }
 
 export function clearCorrectnessKeyStyle(...keys) {
     keys.forEach(el => {
-        document.getElementById(el.getNote() + el.getId().classList.remove('incorrectKey'));
-        document.getElementById(el.getNote() + el.getId().classList.remove('correctKey'));
+        document.getElementById(el.getNote().classList.remove('incorrectKey'));
+        document.getElementById(el.getNote().classList.remove('correctKey'));
     });
 }

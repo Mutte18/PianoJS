@@ -22,7 +22,7 @@ export function playSingleKeySound(key){
 export function playChordSound(chordToGuess){
     const chordSounds = [];
     chordToGuess.forEach(el => {
-        const id = el.getNote()+el.getId();
+        const id = el.getNote();
         chordSounds.push(new Audio(keySounds[`${id}.m4a`]));
     });
     chordSounds.forEach(el => {
