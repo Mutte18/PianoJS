@@ -61,7 +61,7 @@ export default class SingleKeyController {
         const notesArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
 
         let randomNote = this.getRandomNote(idsArray, notesArray);
-        if(oldCorrectKey) {
+        if (oldCorrectKey) {
             while (randomNote === oldCorrectKey.getNote()) {
                 console.log("ranomdizing");
                 randomNote = this.getRandomNote(idsArray, notesArray);
@@ -73,7 +73,7 @@ export default class SingleKeyController {
         return this.pianoKeysMap.getKey(randomNote);
     }
 
-    getRandomNote(idArray, noteArray){
+    getRandomNote(idArray, noteArray) {
         const randomNote = noteArray[Math.floor(Math.random() * noteArray.length)];
         const randomId = idArray[Math.floor(Math.random() * idArray.length)];
         return randomNote + randomId.toString();

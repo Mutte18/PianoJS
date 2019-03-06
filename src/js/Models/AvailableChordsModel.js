@@ -1,36 +1,34 @@
-export default class ChordsModel {
-    chords = {
-        cMajor: ['a0', 'c0', 'g0'],
-        fMajor: ['f0', 'a0', 'c1'],
-        gMajor: ['g0', 'b0', 'd1'],
-        aMinor: ['a0', 'c1', 'e1'],
-        BbMajor: ['as0', 'd1', 'f1'],
-        dMinor: ['d0', 'f0', 'a0'],
-        dMajor: ['d0', 'fs0', 'a0'],
-        aMajor: ['a0', 'cs1', 'e1'],
-        eMajor: ['e0', 'gs0', 'b0'],
-        cSMajor: ['cs0', 'e0', 'gs0'],
-        bMajor: ['b0', 'ds1', 'fs1'],
-        fSMajor: ['fs0', 'a0', 'cs1']
-    };
-
-    chordNames = [
-        'cMajor',
-        'fMajor',
-        'gMajor',
-        'aMinor',
-        'BbMajor',
-        'dMinor',
-        'dMajor',
-        'aMajor',
-        'eMajor',
-        'cSMajor',
-        'bMajor',
-        'fSMajor',
-    ];
-
+export default class AvailableChordsModel {
     constructor() {
+        this.chords = {
+            cMajor: ['a0', 'c0', 'g0'],
+            fMajor: ['f0', 'a0', 'c1'],
+            gMajor: ['g0', 'b0', 'd1'],
+            aMinor: ['a0', 'c1', 'e1'],
+            BbMajor: ['as0', 'd1', 'f1'],
+            dMinor: ['d0', 'f0', 'a0'],
+            dMajor: ['d0', 'fs0', 'a0'],
+            aMajor: ['a0', 'cs1', 'e1'],
+            eMajor: ['e0', 'gs0', 'b0'],
+            cSMajor: ['cs0', 'e0', 'gs0'],
+            bMajor: ['b0', 'ds1', 'fs1'],
+            fSMajor: ['fs0', 'a0', 'cs1']
+        };
 
+        this.chordNames = [
+            'cMajor',
+            'fMajor',
+            'gMajor',
+            'aMinor',
+            'BbMajor',
+            'dMinor',
+            'dMajor',
+            'aMajor',
+            'eMajor',
+            'cSMajor',
+            'bMajor',
+            'fSMajor',
+        ];
     }
 
     /*

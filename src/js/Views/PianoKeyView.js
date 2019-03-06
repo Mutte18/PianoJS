@@ -1,4 +1,4 @@
-import {DOMStrings} from "../index";
+import {DOMStrings} from "../base.js";
 
 export default class PianoKeyView{
     constructor(){
@@ -39,5 +39,26 @@ export default class PianoKeyView{
     addPianoToHTML(keyHTML) {
         const pianoHTML = document.querySelector(DOMStrings.pianoContainer);
         pianoHTML.insertAdjacentHTML('beforeend', keyHTML);
+    }
+
+    toggleChordSelectedStyle(key) {
+        document.getElementById(key.getNote()).classList.toggle('chordSelected');
+    }
+    addHoverToChordKeys(userChord){
+        userChord.forEach(el => {
+            document.getElementById(el.getNote()).classList.add('active');
+        })
+    }
+    addCorrectnessKeyStyle(key, isMatch) {
+        console.log();
+        if(!(Object.prototype.toString.call(key) === '[object String]')){
+            key = key.getNote();
+        }
+        if (isMatch) {
+            document.getElementById(key).classList.add('correctKey');
+        }
+        else {
+            document.getElementById(key).classList.add('incorrectKey');
+        }
     }
 }

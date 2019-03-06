@@ -1,12 +1,10 @@
-import * as uiHandler from "./Views/UIHandler";
-import * as pianoHandler from "./Views/PianoHandler";
 import * as base from "./base.js";
-import {DOMStrings} from "./index";
-import * as soundHandler from "./Views/SoundHandler";
+
 
 export default class InputHandler{
-    constructor(singleKeyController){
+    constructor(singleKeyController, chordController){
         this.singleKeyController = singleKeyController;
+        this.chordController = chordController;
         this.setUpEventHandlers();
         this.currentMode = base.modeEnum.SINGLE_KEY_MODE;
     }
@@ -16,8 +14,8 @@ export default class InputHandler{
     }
 
     setUpEventHandlers(){
-        document.querySelector(DOMStrings.pianoContainer).addEventListener('click', e => {
-                const id = e.target.closest(`${DOMStrings.pianoKey}`).dataset.id;
+        document.querySelector(base.DOMStrings.pianoContainer).addEventListener('click', e => {
+                const id = e.target.closest(`${base.DOMStrings.pianoKey}`).dataset.id;
                 this.handleClick(id);
             });
 
@@ -26,6 +24,7 @@ export default class InputHandler{
             if (e.key === 'Enter') {
                 if (base.getGameOver()) {
                     this.singleKeyController.initSingleKeyMode();
+                    this.chordController.initChordMode();
                     /*uiHandler.addHoverOnKeys();
                     pianoHandler.clearSelectedKeys();
                     uiHandler.clearCorrectnessKeyStyle();
@@ -34,9 +33,9 @@ export default class InputHandler{
                 }
             }
             if (e.key === 'x') {
-                /*if (gameRunning) {
-                    attemptChordGuess();
-                }*/
+                if (!base.getGameOver()) {
+                    this.chordController.verifySelectedAccord();
+                }
                 //clearSelections();
             }
             /*if (e.key === 'c') {
@@ -62,6 +61,7 @@ export default class InputHandler{
                  */
                 break;
             case base.modeEnum.CHORD_MODE:
+                this.chordController.addKeyToChord(clickedID);
                 //accordKeySelection(id);
                 /*
                 1. Set up the keys that are to be pressed

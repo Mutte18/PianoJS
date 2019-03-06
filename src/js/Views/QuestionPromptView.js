@@ -1,4 +1,4 @@
-import {DOMStrings} from "../index";
+import {DOMStrings} from "../base.js";
 
 export default class QuestionPromptView {
     constructor() {
@@ -21,5 +21,9 @@ export default class QuestionPromptView {
     updateSingleKeyImage(image) {
         document.querySelector('.notes').innerHTML = `
                 <img src=${image}>`;
+    }
+    updateChordToSelectText(chord) {
+        document.querySelector(DOMStrings.questionPrompt).innerHTML = `Please press the keys to make ${chord.getName()} chord`;
+
     }
 }

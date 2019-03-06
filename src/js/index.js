@@ -10,6 +10,8 @@ import QuestionPromptView from "./Views/QuestionPromptView";
 import InputHandler from "./InputHandler";
 import PianoKeyModel from "./Models/PianoKeyModel";
 import PianoKeysKeyMapModel from "./Models/PianoKeysKeyMapModel";
+import ChordController from "./Controller/ChordController";
+import AvailableChordsModel from "./Models/AvailableChordsModel";
 
 let gameRunning = true;
 let currentKey = {};
@@ -37,30 +39,7 @@ const userChord = {
 let chordToGuess = [];
 
 
-const modeEnum = {
-    SINGLE_KEY_MODE: 1,
-    CHORD_MODE: 2,
-    FREE_PLAY_MODE: 3
-};
 
-export const DOMStrings = {
-    pianoContainer: '.pianoContainer',
-    questionPrompt: '.questionPrompt',
-    pianoKey: '.key',
-    activeHover: 'hover'
-};
-
-
-function setKeyToGuess() {
-    const idsArray = [0];
-    const notesArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
-
-    const randomNote = notesArray[Math.floor(Math.random() * notesArray.length)]
-    const randomId = idsArray[Math.floor(Math.random() * idsArray.length)];
-    currentKey = pianoHandler.getKey(randomNote + randomId);
-    uiHandler.updateNoteImage(currentKey);
-    uiHandler.updateKeyText(currentKey);
-}
 
 function setUpEventHandlers() {
     document.querySelector(DOMStrings.pianoContainer).addEventListener('click', e => {
@@ -98,28 +77,6 @@ function setUpEventHandlers() {
     });
 }
 
-
-
-function singleKeySelection(id) {
-
-
-    gameRunning = false;
-    const clickedKey = pianoHandler.getKey(id);
-    const requestedKey = clickedKey.getNote();
-
-    const correctKey = currentKey.getNote();
-    if (requestedKey === correctKey) {
-        document.querySelector(DOMStrings.questionPrompt).innerHTML = "CORRECT! <br> Press ENTER to start over";
-        document.getElementById(`${requestedKey}`).classList.add('correctKey');
-    }
-    else {
-        document.querySelector(DOMStrings.questionPrompt).innerHTML = "WROOOONG! <br> Press ENTER to start over";
-        document.getElementById(`${requestedKey}`).classList.add('incorrectKey');
-        document.getElementById(`${correctKey}`).classList.add('correctKey');
-    }
-    uiHandler.removeHoverOnKeys()
-
-}
 
 
 function attemptChordGuess() {
@@ -218,7 +175,10 @@ function init() {
     pianoKeyView.addPianoToHTML(pianoKeysMap.getPianoKeysHTML());
     const singleKeyController = new SingleKeyController(
         pianoKeyView, questionPromptView, pianoKeysMap);
-    const inputHandler = new InputHandler(singleKeyController);
+    const availableChords = new AvailableChordsModel();
+    const chordController = new ChordController(
+        pianoKeyView, questionPromptView, pianoKeysMap, availableChords);
+    const inputHandler = new InputHandler(singleKeyController, chordController);
 
     /*pianoHandler.createPiano(2);
     setUpEventHandlers();
@@ -231,15 +191,4 @@ function init() {
     //currentMode = modeEnum.SINGLE_KEY_MODE;
 }
 
-function createPiano(octaves) {
-
-    this.pianoKeyView.addPianoToHTML(this.getPianoKeysHTML()); //CALL TO VIEW
-}
-
-function createPianoKeys(id) {
-
-}
-
-
 init();
-//initializePiano();

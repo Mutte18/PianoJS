@@ -4,7 +4,7 @@ export const modeEnum = {
     FREE_PLAY_MODE: 3
 };
 
-export let currentMode = modeEnum.SINGLE_KEY_MODE;
+export let currentMode = modeEnum.CHORD_MODE;
 
 export let gameOver = false;
 

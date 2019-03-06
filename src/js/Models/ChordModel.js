@@ -4,10 +4,10 @@ export default class ChordModel{
         this.chordKeys = chordKeys;
     }
 
-    getChordName(){
+    getName(){
         return this.chordName;
     }
-    getChordKeys(){
+    getKeys(){
         return this.chordKeys;
     }
 }
