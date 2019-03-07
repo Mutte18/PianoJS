@@ -50,15 +50,11 @@ export default class PianoKeyView{
         })
     }
     addCorrectnessKeyStyle(key, isMatch) {
-        console.log();
-        if(!(Object.prototype.toString.call(key) === '[object String]')){
-            key = key.getNote();
-        }
         if (isMatch) {
-            document.getElementById(key).classList.add('correctKey');
+            document.getElementById(key.getNote()).classList.add('correctKey');
         }
         else {
-            document.getElementById(key).classList.add('incorrectKey');
+            document.getElementById(key.getNote()).classList.add('incorrectKey');
         }
     }
 }

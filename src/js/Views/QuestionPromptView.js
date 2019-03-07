@@ -19,11 +19,14 @@ export default class QuestionPromptView {
     }
 
     updateSingleKeyImage(image) {
-        document.querySelector('.notes').innerHTML = `
-                <img src=${image}>`;
+        document.querySelector('.notes').innerHTML = `<img src=${image}>`;
     }
     updateChordToSelectText(chord) {
         document.querySelector(DOMStrings.questionPrompt).innerHTML = `Please press the keys to make ${chord.getName()} chord`;
 
+    }
+    updateChordSelectionCounterText(userChordSize = 0, chordToGuessSize){
+        document.querySelector('.chordSelectionCounter').textContent =
+            `${userChordSize}/${chordToGuessSize} selected`;
     }
 }
