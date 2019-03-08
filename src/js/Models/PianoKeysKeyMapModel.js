@@ -18,7 +18,6 @@ export default class PianoKeysKeyMapModel{
             this.keysMap.set(`as${i}`, new PianoKeyModel(i, 'black', 'as'));
             this.keysMap.set(`b${i}`, new PianoKeyModel(i, 'white', 'b'));
         }
-        console.log(this.keysMap);
     }
 
     getPianoKeysHTML() {

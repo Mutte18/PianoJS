@@ -10,27 +10,28 @@ export default class ChordController {
         this.keySoundsModel = keySoundsModel;
         this.soundView = soundView;
         this.userChord = [];
-        this.initChordMode();
         this.correctChord = true;
     }
 
     initChordMode() {
-        //Play the correct chord, unless it is a new round and there is no previous chord
-        if(this.chordToGuess && !this.correctChord){
-            this.playChordSound(this.chordToGuess.getKeys());
+        if(base.getGameMode() === base.modeEnum.CHORD_MODE) {
+            //Play the correct chord, unless it is a new round and there is no previous chord
+            if (this.chordToGuess && !this.correctChord) {
+                this.playChordSound(this.chordToGuess.getKeys());
+            }
+            this.chordToGuess = this.setUpChordToGuess();
+            console.log(this.chordToGuess.getName(), this.chordToGuess.getKeys());
+            this.userChord = [];
+            this.questionPromptView.updateChordToSelectText(this.chordToGuess);
+            //Update questionPromptView to show the correct chord Notes image
+            this.pianoKeyView.addHoverOnKeys();
+            this.pianoKeyView.removeSingleKeyStyles();
+            this.questionPromptView.updateChordSelectionCounterText(
+                this.userChord.length, this.chordToGuess.getKeys().length);
+            //Clear currently selected UserChords
+            //Reset styles and such
+            //Reset chordSelection Counter in new view file?
         }
-        this.chordToGuess = this.setUpChordToGuess();
-        console.log(this.chordToGuess.getName(), this.chordToGuess.getKeys());
-        this.userChord = [];
-        this.questionPromptView.updateChordToSelectText(this.chordToGuess);
-        //Update questionPromptView to show the correct chord Notes image
-        this.pianoKeyView.addHoverOnKeys();
-        this.pianoKeyView.removeSingleKeyStyles();
-        this.questionPromptView.updateChordSelectionCounterText(
-            this.userChord.length, this.chordToGuess.getKeys().length);
-        //Clear currently selected UserChords
-        //Reset styles and such
-        //Reset chordSelection Counter in new view file?
     }
 
     setUpChordToGuess() {
@@ -54,7 +55,6 @@ export default class ChordController {
 
     removeDuplicateKeyFromChord(duplicateKey) {
         this.userChord.splice(duplicateKey.index, 1);
-        duplicateKey.clickedKey.setChordSelected(false);
         this.pianoKeyView.toggleChordSelectedStyle(duplicateKey.clickedKey);
         this.checkSizeOfChord();
         this.questionPromptView.updateChordSelectionCounterText(

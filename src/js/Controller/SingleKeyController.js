@@ -2,14 +2,15 @@ import * as base from "../base";
 import NoteImagesModel from "../Models/NoteImagesModel";
 
 export default class SingleKeyController {
-    constructor(pianoKeyView, questionPromptView, pianoKeysMapModel) {
+    constructor(pianoKeyView, questionPromptView, pianoKeysMapModel, keySoundsModel, soundView) {
         this.pianoKeyView = pianoKeyView;
         this.pianoKeysMap = pianoKeysMapModel;
         this.questionPromptView = questionPromptView;
         this.correctSingleKey = this.setNewCorrectSingleKey();
         this.noteImagesModel = new NoteImagesModel();
-        this.gameOver = false;
-        this.initSingleKeyMode();
+        this.keySoundsModel = keySoundsModel;
+        this.soundView = soundView;
+        this.correctKeyGuessed = true;
     }
 
 
@@ -17,10 +18,10 @@ export default class SingleKeyController {
         if (!base.getGameOver()) {
             const pianoKeyModel = this.pianoKeysMap.getKey(keyID);
 
-
             if (pianoKeyModel.getNote() === this.correctSingleKey.getNote()) {
                 this.pianoKeyView.addSingleKeyCorrectStyle(pianoKeyModel, true);
                 this.questionPromptView.updateClickedKeyResults(true);
+                this.correctKeyGuessed = true;
                 /*
                 1. Send to view to update text that you guessed Correctly
                 2. Send to view to update clicked key background colour to green
@@ -29,6 +30,7 @@ export default class SingleKeyController {
             else {
                 this.pianoKeyView.addSingleKeyCorrectStyle(pianoKeyModel, false, this.correctSingleKey);
                 this.questionPromptView.updateClickedKeyResults(false);
+                this.correctKeyGuessed = false;
 
                 /*
                 1. Send to view to update text that you guessed INCORRECTLY
@@ -36,6 +38,7 @@ export default class SingleKeyController {
                 3. Send to view to update correct key background colour to outline green
                  */
             }
+            this.soundView.playSingleKeySound(this.keySoundsModel.getSound(pianoKeyModel));
             base.setGameOver(true);
             this.pianoKeyView.removeHoverOnKeys();
             //pause game, remove hover from keys etc
@@ -44,15 +47,19 @@ export default class SingleKeyController {
     }
 
     initSingleKeyMode() {
-        base.setGameOver(false);
-
-        this.correctSingleKey = this.setNewCorrectSingleKey(this.correctSingleKey);
-        this.questionPromptView.updateKeyToGuessText(this.correctSingleKey);
-        this.questionPromptView.updateSingleKeyImage(this.noteImagesModel.getNoteImage(this.correctSingleKey));
-        this.pianoKeyView.addHoverOnKeys();
-        this.pianoKeyView.removeSingleKeyStyles();
-        //Here we want to reset everything, this is done when game starts and when user presses enter
-        //after a round has been played
+        if (base.getGameMode() === base.modeEnum.SINGLE_KEY_MODE) {
+            base.setGameOver(false);
+            if (this.correctSingleKey && !this.correctKeyGuessed) {
+                this.soundView.playSingleKeySound(this.keySoundsModel.getSound(this.correctSingleKey));
+            }
+            this.correctSingleKey = this.setNewCorrectSingleKey(this.correctSingleKey);
+            this.questionPromptView.updateKeyToGuessText(this.correctSingleKey);
+            this.questionPromptView.updateSingleKeyImage(this.noteImagesModel.getNoteImage(this.correctSingleKey));
+            this.pianoKeyView.addHoverOnKeys();
+            this.pianoKeyView.removeSingleKeyStyles();
+            //Here we want to reset everything, this is done when game starts and when user presses enter
+            //after a round has been played
+        }
     }
 
     setNewCorrectSingleKey(oldCorrectKey) {

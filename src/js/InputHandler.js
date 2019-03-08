@@ -2,15 +2,12 @@ import * as base from "./base.js";
 
 
 export default class InputHandler{
-    constructor(singleKeyController, chordController){
+    constructor(singleKeyController, chordController, freePlayController){
         this.singleKeyController = singleKeyController;
         this.chordController = chordController;
+        this.freePlayController = freePlayController;
         this.setUpEventHandlers();
-        this.currentMode = base.modeEnum.SINGLE_KEY_MODE;
-    }
-
-    updateCurrentMode(){
-        //Change currentMode to whatever mode is clicked on from the radio buttons
+        this.changeGameMode();
     }
 
     setUpEventHandlers(){
@@ -19,12 +16,20 @@ export default class InputHandler{
                 this.handleClick(id);
             });
 
+        document.querySelector(base.DOMStrings.gameModeToggle).addEventListener('change', e => {
+            const gameMode = document.querySelector('input[type = radio]:checked').id;
+            base.setGameMode(gameMode);
+            this.changeGameMode();
+
+        });
+
 
         document.addEventListener('keypress', e => {
             if (e.key === 'Enter') {
                 if (base.getGameOver()) {
-                    this.singleKeyController.initSingleKeyMode();
                     this.chordController.initChordMode();
+                    this.singleKeyController.initSingleKeyMode();
+
                     /*uiHandler.addHoverOnKeys();
                     pianoHandler.clearSelectedKeys();
                     uiHandler.clearCorrectnessKeyStyle();
@@ -49,32 +54,32 @@ export default class InputHandler{
         });
     }
 
+    changeGameMode(){
+        console.log(base.getGameMode());
+        //Call to every controller to clear all views
+        switch(base.getGameMode()){
+            case base.modeEnum.SINGLE_KEY_MODE:
+                this.singleKeyController.initSingleKeyMode();
+                break;
+            case base.modeEnum.CHORD_MODE:
+                this.chordController.initChordMode();
+                break;
+            case base.modeEnum.FREE_PLAY_MODE:
+                this.freePlayController.initFreePlayMode();
+                break;
+        }
+    }
+
     handleClick(clickedID){
         switch (base.currentMode) {
             case base.modeEnum.SINGLE_KEY_MODE:
                 this.singleKeyController.checkKey(clickedID);
-
-                /*
-                1. Set up which key to guess
-                2. Allow User to click a key
-                3. Update UI and show right/wrong
-                 */
                 break;
             case base.modeEnum.CHORD_MODE:
                 this.chordController.addKeyToChord(clickedID);
-                //accordKeySelection(id);
-                /*
-                1. Set up the keys that are to be pressed
-                2. Allow user to click up to three different keys, if click same deselect key
-                3. Update UI and show right/wrong
-                 */
                 break;
             case base.modeEnum.FREE_PLAY_MODE:
-                //soundHandler.playSingleKeySound(id);
-
-                /*
-                Just play the sound of the note pressed
-                 */
+                this.freePlayController.playSound(clickedID);
                 break;
         }
     }
